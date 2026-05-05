@@ -19,8 +19,8 @@ export async function sendInvitationEmail({
     subject: "You've been invited to the creator dashboard",
     html: `
       <p>Hi ${name},</p>
-      <p>You've been invited to join the creator referral dashboard. Click the button below to set up your account.</p>
-      <p><a href="${url}" style="background:#000;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;">Set up my account</a></p>
+      <p>You've been invited to join the creator referral dashboard. Click the link below to set up your account.</p>
+      <p><a href="${url}">${url}</a></p>
       <p>This link expires in 7 days.</p>
     `,
   });
