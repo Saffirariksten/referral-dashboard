@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ skipped: true, reason: "no discount code" });
   }
 
-  const usedCode = discountCodes[0].code.toUpperCase();
+  const usedCode = discountCodes[0].code.trim().toUpperCase();
   const creator = await prisma.creator.findUnique({ where: { referralCode: usedCode } });
   if (!creator) {
     return NextResponse.json({ skipped: true, reason: "code not matched" });

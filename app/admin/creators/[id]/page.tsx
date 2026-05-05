@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { EditCreatorForm } from "@/components/edit-creator-form";
+import { CreatorActions } from "@/components/creator-actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -18,7 +19,10 @@ export default async function CreatorDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <h1 className="text-2xl font-bold">{creator.displayName}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{creator.displayName}</h1>
+        <CreatorActions creatorId={creator.id} hasAccount={!!creator.user.password} />
+      </div>
 
       <div className="grid grid-cols-3 gap-4">
         <Card>

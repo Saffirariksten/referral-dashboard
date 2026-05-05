@@ -11,7 +11,8 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { name, email, referralCode, commissionRate, discountRate } = body;
+  const { name, email, commissionRate, discountRate } = body;
+  const referralCode = body.referralCode?.toUpperCase();
 
   if (!name || !email || !referralCode) {
     return NextResponse.json({ error: "Missing required fields." }, { status: 400 });

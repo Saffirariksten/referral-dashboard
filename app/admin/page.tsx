@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CreatorSalesChart } from "@/components/creator-sales-chart";
 import Link from "next/link";
 
 export default async function AdminOverviewPage() {
@@ -49,6 +50,23 @@ export default async function AdminOverviewPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Top creators by net revenue</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CreatorSalesChart
+            data={creators
+              .map((c) => ({
+                name: c.displayName,
+                netRevenue: c.orders.reduce((s, o) => s + o.netAmount, 0),
+                commission: c.orders.reduce((s, o) => s + o.commission, 0),
+              }))
+              .sort((a, b) => b.netRevenue - a.netRevenue)}
+          />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

@@ -1,17 +1,23 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { Button } from "@/components/ui/button";
 
-export function SignOutButton() {
+export function SignOutButton({
+  textColor = "#ffffff",
+  hoverBg = "rgba(255,255,255,0.1)",
+}: {
+  textColor?: string;
+  hoverBg?: string;
+}) {
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="w-full text-white hover:bg-white/20"
+    <button
+      className="w-full text-left px-3 py-2 rounded text-sm transition-colors"
+      style={{ color: textColor }}
+      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = hoverBg)}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
       onClick={() => signOut({ callbackUrl: "/login" })}
     >
       Sign out
-    </Button>
+    </button>
   );
 }
