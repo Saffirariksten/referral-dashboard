@@ -14,7 +14,7 @@ export async function sendInvitationEmail({
   const url = `${process.env.NEXT_PUBLIC_APP_URL}/accept-invite?token=${token}`;
 
   await resend.emails.send({
-    from: "Referral Dashboard <noreply@yourdomain.com>",
+    from: "Referral Dashboard <onboarding@resend.dev>",
     to,
     subject: "You've been invited to the creator dashboard",
     html: `
