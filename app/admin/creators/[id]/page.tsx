@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { EditCreatorForm } from "@/components/edit-creator-form";
 import { CreatorActions } from "@/components/creator-actions";
+import { OrderActions } from "@/components/order-actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -68,6 +69,7 @@ export default async function CreatorDetailPage({ params }: { params: Promise<{ 
                 <th className="pb-2 font-medium">Net</th>
                 <th className="pb-2 font-medium">Commission</th>
                 <th className="pb-2 font-medium">Source</th>
+                <th className="pb-2 font-medium"></th>
               </tr>
             </thead>
             <tbody>
@@ -79,14 +81,13 @@ export default async function CreatorDetailPage({ params }: { params: Promise<{ 
                   <td className="py-2">-€{o.discountAmount.toFixed(2)}</td>
                   <td className="py-2">€{o.netAmount.toFixed(2)}</td>
                   <td className="py-2">€{o.commission.toFixed(2)}</td>
-                  <td className="py-2">
-                    <Badge variant="secondary">{o.source}</Badge>
-                  </td>
+                  <td className="py-2"><Badge variant="secondary">{o.source}</Badge></td>
+                  <td className="py-2"><OrderActions order={o} creator={creator} /></td>
                 </tr>
               ))}
               {creator.orders.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="py-6 text-center text-gray-400">
+                  <td colSpan={8} className="py-6 text-center text-gray-400">
                     No orders yet.
                   </td>
                 </tr>

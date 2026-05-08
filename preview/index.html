@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator Dashboard Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #111; display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar { width: 200px; background: #cbc1b0; display: flex; flex-direction: column; flex-shrink: 0; }
+    .sidebar-header { padding: 20px 20px 12px; border-bottom: 1px solid rgba(0,0,0,0.1); text-align: center; }
+    .sidebar-brand { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: rgba(0,0,0,0.5); text-transform: uppercase; }
+    .sidebar-title { font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.75); margin-top: 4px; }
+    .sidebar-nav { flex: 1; padding: 16px 12px; }
+    .sidebar-nav a { display: block; padding: 8px 12px; border-radius: 6px; font-size: 13px; color: rgba(0,0,0,0.8); text-decoration: none; background: rgba(0,0,0,0.1); font-weight: 600; }
+    .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(0,0,0,0.1); }
+    .sidebar-footer button { background: none; border: none; font-family: inherit; font-size: 13px; color: rgba(0,0,0,0.6); padding: 8px 12px; cursor: pointer; width: 100%; text-align: left; border-radius: 6px; }
+
+    /* Main */
+    .main { flex: 1; padding: 32px; display: flex; flex-direction: column; gap: 20px; max-width: 800px; }
+
+    /* Cards */
+    .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; }
+
+    /* Code card */
+    .code-label { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .code-value { font-size: 32px; font-weight: 700; letter-spacing: 4px; font-family: monospace; }
+    .code-meta { display: flex; gap: 24px; margin-top: 16px; }
+    .code-meta-item p:first-child { font-size: 12px; color: #9ca3af; }
+    .code-meta-item p:last-child { font-size: 15px; font-weight: 600; margin-top: 2px; }
+
+    /* Month nav */
+    .month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .month-controls { display: flex; align-items: center; gap: 12px; }
+    .month-controls button { background: none; border: none; font-size: 18px; cursor: pointer; color: #374151; padding: 4px 8px; border-radius: 6px; line-height: 1; }
+    .month-controls button:disabled { opacity: 0.3; cursor: default; }
+    .month-controls button:not(:disabled):hover { background: #f3f4f6; }
+    .month-label { font-size: 16px; font-weight: 600; min-width: 120px; text-align: center; }
+    .tabs { display: flex; background: #f3f4f6; border-radius: 8px; padding: 3px; gap: 2px; }
+    .tab { padding: 6px 14px; border-radius: 6px; border: none; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; background: none; color: #6b7280; transition: all 0.15s; }
+    .tab.active { background: white; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .stat { background: #f9fafb; border-radius: 8px; padding: 12px; }
+    .stat-label { font-size: 11px; color: #9ca3af; margin-bottom: 4px; }
+    .stat-value { font-size: 24px; font-weight: 700; }
+
+    /* Chart */
+    .chart-label { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .chart-wrap { width: 100%; height: 180px; position: relative; }
+    svg.chart { width: 100%; height: 100%; overflow: visible; }
+
+    /* Today orders */
+    .today-order { display: flex; justify-content: space-between; align-items: center; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; font-size: 13px; margin-bottom: 8px; }
+    .today-order-num { font-weight: 600; }
+    .today-order-net { color: #6b7280; }
+    .today-order-comm { font-weight: 700; color: #111; }
+
+    /* Biggest order */
+    .biggest { display: flex; justify-content: space-between; align-items: center; }
+    .biggest-title { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .biggest-name { font-weight: 600; font-size: 15px; }
+    .biggest-date { font-size: 12px; color: #9ca3af; margin-top: 2px; }
+    .biggest-amount p:first-child { font-size: 11px; color: #9ca3af; text-align: right; }
+    .biggest-amount p:last-child { font-size: 18px; font-weight: 700; text-align: right; }
+    .green { color: #16a34a; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-brand">Ostium Home</div>
+    <div class="sidebar-title">Creator Hub</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#">My dashboard</a>
+  </nav>
+  <div class="sidebar-footer">
+    <button>Sign out</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div>
+    <h1 style="font-size:22px;font-weight:700;">Hi, Sarah!</h1>
+    <p style="color:#9ca3af;font-size:13px;margin-top:4px;">Here's your referral overview.</p>
+  </div>
+
+  <!-- Code card -->
+  <div class="card">
+    <div class="code-label">Your referral code</div>
+    <div class="code-value">SARAH10</div>
+    <div class="code-meta">
+      <div class="code-meta-item"><p>Customer discount</p><p>10% off</p></div>
+      <div class="code-meta-item"><p>Your commission</p><p>10% of net</p></div>
+    </div>
+  </div>
+
+  <!-- Month card with chart -->
+  <div class="card" id="main-card">
+    <div class="month-nav">
+      <div class="month-controls">
+        <button id="prev" onclick="changeMonth(-1)">&#8592;</button>
+        <span class="month-label" id="month-label">May 2026</span>
+        <button id="next" onclick="changeMonth(1)" disabled>&#8594;</button>
+      </div>
+      <div class="tabs">
+        <button class="tab active" onclick="setTab('month', this)">This month</button>
+        <button class="tab" onclick="setTab('today', this)">Today</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-label" id="orders-label">Orders</div><div class="stat-value" id="stat-orders">3</div></div>
+      <div class="stat"><div class="stat-label">Net revenue</div><div class="stat-value" id="stat-revenue">€580</div></div>
+      <div class="stat"><div class="stat-label">Commission</div><div class="stat-value" id="stat-commission">€58</div></div>
+    </div>
+
+    <div class="chart-label">Revenue trend</div>
+    <div class="chart-wrap" id="chart-area"></div>
+  </div>
+
+  <!-- Biggest order -->
+  <div class="card" id="biggest-card">
+    <div class="biggest-title">🏆 Biggest order this month</div>
+    <div class="biggest">
+      <div>
+        <div class="biggest-name" id="big-num">#1012</div>
+        <div class="biggest-date" id="big-date">05/05/2026</div>
+      </div>
+      <div class="biggest-amount">
+        <p>Net order</p>
+        <p id="big-net">€279.00</p>
+      </div>
+      <div class="biggest-amount">
+        <p>Your commission</p>
+        <p class="green" id="big-comm">€27.90</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const months = [
+    { label: 'March 2026', orders: [
+      { date: 5, net: 108, commission: 10.8, num: '#1001' },
+      { date: 12, net: 225, commission: 22.5, num: '#1002' },
+      { date: 18, net: 80, commission: 8.0, num: '#1003' },
+      { date: 22, net: 306, commission: 30.6, num: '#1004' },
+      { date: 28, net: 157, commission: 15.7, num: '#1005' },
+    ], days: 31 },
+    { label: 'April 2026', orders: [
+      { date: 3, net: 189, commission: 18.9, num: '#1006' },
+      { date: 9, net: 85, commission: 8.5, num: '#1007' },
+      { date: 15, net: 378, commission: 37.8, num: '#1008' },
+      { date: 21, net: 144, commission: 14.4, num: '#1009' },
+      { date: 27, net: 252, commission: 25.2, num: '#1010' },
+    ], days: 30 },
+    { label: 'May 2026', orders: [
+      { date: 1, net: 171, commission: 17.1, num: '#1011' },
+      { date: 5, net: 279, commission: 27.9, num: '#1012' },
+      { date: 8, net: 130, commission: 13.0, num: '#1013' },
+    ], days: 31 },
+  ];
+
+  const todayOrders = [
+    { net: 130, commission: 13.0, num: '#1013' },
+  ];
+
+  let monthIndex = 2;
+  let currentTab = 'month';
+
+  function changeMonth(dir) {
+    monthIndex = Math.max(0, Math.min(months.length - 1, monthIndex + dir));
+    update();
+  }
+
+  function setTab(tab, el) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    update();
+  }
+
+  function update() {
+    const m = months[monthIndex];
+    document.getElementById('month-label').textContent = m.label;
+    document.getElementById('prev').disabled = monthIndex === 0;
+    document.getElementById('next').disabled = monthIndex === months.length - 1;
+
+    const orders = currentTab === 'today' ? todayOrders : m.orders;
+    const totalNet = orders.reduce((s, o) => s + o.net, 0);
+    const totalComm = orders.reduce((s, o) => s + o.commission, 0);
+
+    document.getElementById('orders-label').textContent = currentTab === 'today' ? "Today's orders" : 'Orders';
+    document.getElementById('stat-orders').textContent = orders.length;
+    document.getElementById('stat-revenue').textContent = '€' + totalNet.toFixed(0);
+    document.getElementById('stat-commission').textContent = '€' + totalComm.toFixed(0);
+
+    if (currentTab === 'month') {
+      drawChart(m);
+      document.getElementById('biggest-card').style.display = 'block';
+      const biggest = [...m.orders].sort((a, b) => b.net - a.net)[0];
+      if (biggest) {
+        document.getElementById('big-num').textContent = biggest.num;
+        document.getElementById('big-net').textContent = '€' + biggest.net.toFixed(2);
+        document.getElementById('big-comm').textContent = '€' + biggest.commission.toFixed(2);
+      }
+    } else {
+      drawTodayList();
+      document.getElementById('biggest-card').style.display = 'none';
+    }
+  }
+
+  function drawChart(m) {
+    const wrap = document.getElementById('chart-area');
+    const W = wrap.offsetWidth || 600;
+    const H = 180;
+    const padL = 48, padR = 16, padT = 10, padB = 28;
+    const innerW = W - padL - padR;
+    const innerH = H - padT - padB;
+
+    // Build daily data
+    const dayMap = {};
+    m.orders.forEach(o => { dayMap[o.date] = (dayMap[o.date] || 0) + o.net; });
+    const data = [];
+    for (let d = 1; d <= m.days; d++) data.push({ d, v: dayMap[d] || 0 });
+
+    const maxV = Math.max(...data.map(p => p.v), 1);
+    const xStep = innerW / (m.days - 1);
+
+    const pts = data.map((p, i) => ({
+      x: padL + i * xStep,
+      y: padT + innerH - (p.v / maxV) * innerH,
+      v: p.v,
+      d: p.d,
+    }));
+
+    const linePath = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+    const areaPath = linePath + ` L${pts[pts.length-1].x.toFixed(1)},${(padT+innerH).toFixed(1)} L${pts[0].x.toFixed(1)},${(padT+innerH).toFixed(1)} Z`;
+
+    // Y axis labels
+    const yLabels = [0, maxV/2, maxV].map(v => ({
+      y: padT + innerH - (v / maxV) * innerH,
+      label: v === 0 ? '€0' : v >= 1000 ? `€${(v/1000).toFixed(1)}K` : `€${v.toFixed(0)}`,
+    }));
+
+    // X axis: show a few labels
+    const xLabelIdxs = [0, Math.floor(m.days/4), Math.floor(m.days/2), Math.floor(3*m.days/4), m.days-1];
+
+    const dots = pts.filter(p => p.v > 0).map(p =>
+      `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="#a89a87" stroke="white" stroke-width="2"/>`
+    ).join('');
+
+    wrap.innerHTML = `
+      <svg class="chart" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#cbc1b0" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#cbc1b0" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        ${yLabels.map(l => `
+          <line x1="${padL}" y1="${l.y.toFixed(1)}" x2="${W-padR}" y2="${l.y.toFixed(1)}" stroke="#f0f0f0" stroke-width="1"/>
+          <text x="${padL-6}" y="${(l.y+4).toFixed(1)}" text-anchor="end" font-size="10" fill="#9ca3af">${l.label}</text>
+        `).join('')}
+        ${xLabelIdxs.map(i => `
+          <text x="${pts[i].x.toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#9ca3af">${pts[i].d}</text>
+        `).join('')}
+        <path d="${areaPath}" fill="url(#g)"/>
+        <path d="${linePath}" fill="none" stroke="#a89a87" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        ${dots}
+      </svg>`;
+  }
+
+  function drawTodayList() {
+    const wrap = document.getElementById('chart-area');
+    if (todayOrders.length === 0) {
+      wrap.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px 0;font-size:13px;">No orders today yet.</p>';
+      return;
+    }
+    wrap.innerHTML = todayOrders.map(o => `
+      <div class="today-order">
+        <span class="today-order-num">${o.num}</span>
+        <span class="today-order-net">Net €${o.net.toFixed(2)}</span>
+        <span class="today-order-comm">+€${o.commission.toFixed(2)}</span>
+      </div>
+    `).join('');
+  }
+
+  update();
+  window.addEventListener('resize', () => { if (currentTab === 'month') drawChart(months[monthIndex]); });
+</script>
+</body>
+</html>

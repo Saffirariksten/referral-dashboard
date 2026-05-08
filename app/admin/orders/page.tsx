@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { AddOrderDialog } from "@/components/add-order-dialog";
+import { OrderActions } from "@/components/order-actions";
 
 export default async function OrdersPage() {
   const [orders, creators] = await Promise.all([
@@ -21,7 +21,7 @@ export default async function OrdersPage() {
       </div>
 
       <Card>
-        <CardContent className="pt-6">
+        <CardContent className="pt-6 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b text-left text-gray-500">
@@ -33,6 +33,7 @@ export default async function OrdersPage() {
                 <th className="pb-2 font-medium">Net</th>
                 <th className="pb-2 font-medium">Commission</th>
                 <th className="pb-2 font-medium">Source</th>
+                <th className="pb-2 font-medium"></th>
               </tr>
             </thead>
             <tbody>
@@ -45,16 +46,15 @@ export default async function OrdersPage() {
                   <td className="py-2">-€{o.discountAmount.toFixed(2)}</td>
                   <td className="py-2">€{o.netAmount.toFixed(2)}</td>
                   <td className="py-2">€{o.commission.toFixed(2)}</td>
+                  <td className="py-2"><Badge variant="secondary">{o.source}</Badge></td>
                   <td className="py-2">
-                    <Badge variant="secondary">{o.source}</Badge>
+                    <OrderActions order={o} creator={o.creator} />
                   </td>
                 </tr>
               ))}
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="py-6 text-center text-gray-400">
-                    No orders yet.
-                  </td>
+                  <td colSpan={9} className="py-6 text-center text-gray-400">No orders yet.</td>
                 </tr>
               )}
             </tbody>
